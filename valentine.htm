@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+<style>
+body {
+  background: linear-gradient(135deg, #ffd1dc, #ffe6f0);
+  font-family: 'Comic Sans MS', Arial, sans-serif;
+  text-align: center;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+h1 {
+  margin-top: 40px;
+  color: #c2185b;
+  font-size: 2.5em;
+}
+
+.flowers { font-size: 2rem; margin-bottom: 10px; }
+
+button {
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+#yes {
+  background: #ff4081;
+  color: white;
+  padding: 25px 60px;
+  font-size: 2.5em;
+}
+
+#yes:hover { transform: scale(1.1); }
+
+#no {
+  background: #999;
+  color: white;
+  position: absolute;
+  padding: 10px 20px;
+  font-size: 1em;
+}
+
+#result { display: none; margin-top: 25px; color: #880e4f; font-size: 1.3em; }
+#verse { margin-top: 15px; font-style: italic; color: #6a0032; }
+canvas { display: none; margin: 20px auto; }
+.dare { position: absolute; bottom: 15px; width: 100%; font-size: 1.2em; color: #ad1457; }
+
+.heart, .confetti, .sparkle, .icon { 
+  position: fixed; 
+  top: -10px; 
+  font-size: 20px; 
+  animation: fall linear infinite; 
+  pointer-events: none; 
+}
+
+@keyframes fall { from { transform: translateY(-10px);} to { transform: translateY(110vh);} }
+
+.stickman {
+  position: absolute;
+  bottom: 0;
+  font-size: 2em;
+  color: black;
+  animation: dance 1s infinite alternate;
+}
+
+@keyframes dance {
+  0% { transform: translateY(0) rotate(-15deg);}
+  50% { transform: translateY(-15px) rotate(15deg);}
+  100% { transform: translateY(0) rotate(-15deg);}
+}
+
+#yay { font-size: 3em; color: #ff3366; display: none; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="flowers">🌸🌷🌼🌹🌸</div>
+<h1>Nylah, will you be my Valentine? 💘</h1>
+
+<button id="yes">Yes 💖</button>
+<button id="no">No 🙃</button>
+
+<div id="yay">YAYYYYYY!!!!!!!!! 🎉🕺</div>
+
+<div id="result">
+  <p>
+    You said yes and my heart feels light,<br>
+    Like stars that glow each quiet night.<br>
+    With every smile, with all you do,<br>
+    I’m really glad this Valentine is you 💕
+  </p>
+  <div id="verse">
+    “Love is patient, love is kind.”<br>
+    — 1 Corinthians 13:4 ✝️
+  </div>
+</div>
+
+<canvas id="stick" width="300" height="300"></canvas>
+<div class="dare">😄 Click “No” if you dare 😄</div>
+
+<audio id="music" autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const result = document.getElementById("result");
+const canvas = document.getElementById("stick");
+const ctx = canvas.getContext("2d");
+const yay = document.getElementById("yay");
+
+// No button dodge
+noBtn.addEventListener("mouseover", () => {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 60);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
+
+// Yes button click
+yesBtn.addEventListener("click", () => {
+  result.style.display = "block";
+  canvas.style.display = "block";
+  yay.style.display = "block";
+  drawHappyStick();
+  spawnSideStickmen(12);
+  spawnConfetti(30);
+  spawnSparkles(20);
+  spawnIcons(10);
+  spawnFireworkHearts(10);
+});
+
+// Happy stick figure in center
+function drawHappyStick() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath(); ctx.arc(150, 70, 30, 0, Math.PI*2); ctx.stroke(); // head
+  ctx.beginPath(); ctx.arc(140, 65, 3, 0, Math.PI*2); ctx.arc(160, 65, 3, 0, Math.PI*2); ctx.fill(); // eyes
+  ctx.beginPath(); ctx.arc(150, 75, 15, 0, Math.PI); ctx.stroke(); // smile
+  ctx.beginPath(); ctx.moveTo(150,100); ctx.lineTo(150,180); ctx.stroke(); // body
+  ctx.beginPath(); ctx.moveTo(150,120); ctx.lineTo(110,140); ctx.moveTo(150,120); ctx.lineTo(190,140); ctx.stroke(); // arms
+  ctx.beginPath(); ctx.moveTo(150,180); ctx.lineTo(120,230); ctx.moveTo(150,180); ctx.lineTo(180,230); ctx.stroke(); // legs
+}
+
+// Falling hearts & flowers
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML = Math.random()>0.6?"💖":Math.random()>0.3?"🌸":"🌹";
+  heart.style.left = Math.random()*window.innerWidth+"px";
+  heart.style.fontSize = (15+Math.random()*25)+"px";
+  heart.style.animationDuration=(3+Math.random()*3)+"s";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+}, 300);
+
+// Confetti
+function spawnConfetti(count){
+  for(let i=0;i<count;i++){
+    const conf = document.createElement("div");
+    conf.classList.add("confetti");
+    conf.innerHTML = "🎉";
+    conf.style.left = Math.random()*window.innerWidth+"px";
+    conf.style.fontSize=(20+Math.random()*20)+"px";
+    document.body.appendChild(conf);
+    setTimeout(()=>conf.remove(),4000);
+  }
+}
+
+// Sparkles
+function spawnSparkles(count){
+  for(let i=0;i<count;i++){
+    const spark = document.createElement("div");
+    spark.classList.add("sparkle");
+    spark.innerHTML = "✨";
+    spark.style.left = Math.random()*window.innerWidth+"px";
+    spark.style.fontSize=(15+Math.random()*15)+"px";
+    document.body.appendChild(spark);
+    setTimeout(()=>spark.remove(),5000);
+  }
+}
+
+// Stickmen on sides
+function spawnSideStickmen(count){
+  for(let i=0;i<count;i++){
+    const stick = document.createElement("div");
+    stick.classList.add("stickman");
+    stick.innerHTML = "🕺";
+    const side = Math.random()>0.5 ? 0 : window.innerWidth-40;
+    stick.style.left = side+"px";
+    stick.style.bottom = Math.random()*150+"px";
+    stick.style.fontSize=(30+Math.random()*30)+"px";
+    document.body.appendChild(stick);
+  }
+}
+
+// Icons: Princess & Frog, Hello Kitty
+function spawnIcons(count){
+  const icons = ["👸🐸","🎀🐱"];
+  for(let i=0;i<count;i++){
+    const icon = document.createElement("div");
+    icon.classList.add("icon");
+    icon.innerHTML = icons[Math.floor(Math.random()*icons.length)];
+    icon.style.left = Math.random()*window.innerWidth+"px";
+    icon.style.fontSize=(25+Math.random()*20)+"px";
+    document.body.appendChild(icon);
+    setTimeout(()=>icon.remove(),5000);
+  }
+}
+
+// Firework hearts
+function spawnFireworkHearts(count){
+  for(let i=0;i<count;i++){
+    const heart = document.createElement("div");
+    heart.classList.add("confetti");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random()*window.innerWidth+"px";
+    heart.style.bottom = Math.random()*window.innerHeight/2+"px";
+    heart.style.fontSize=(20+Math.random()*20)+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),2000);
+  }
+}
+</script>
+</body>
+</html>
